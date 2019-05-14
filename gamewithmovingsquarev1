@@ -38,7 +38,7 @@ clock = pygame.time.Clock()
 running = True
 while running:
     #delays the window open
-    pygame.time.delay(1)
+    pygame.time.delay(10)
     #keep loop running at the right speed
     clock.tick(FPS)
     # Process input (events)
@@ -61,12 +61,12 @@ while running:
 
     #make a rectangle
     pygame.draw.rect(screen, (255, 0, 0), (X, Y, WIDTH, HEIGHT))
-    # Update
+    # Update the image
     pygame.display.update()
 
     # Draw / Render
     screen.fill(BLUE)
 
-
+#https://www.youtube.com/watch?v=2-DNswzCkqk
 
 pygame.quit()
