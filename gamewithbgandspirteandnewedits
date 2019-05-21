@@ -1,0 +1,137 @@
+import pygame
+import random
+
+#Define various variables
+#The Sprite is a 64x64 object
+WIDTH = 64
+HEIGHT = 64
+FPS = 30
+
+# Define Colors
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+X = 20
+Y = 440
+SCREENWIDTH = 500
+#Defines Velocity of an Object
+VEL = 5
+
+
+
+#Start Pygame and open a game window
+
+pygame.init()
+pygame.mixer.init()
+#sets size of window
+screen = pygame.display.set_mode((500, 500))
+#Sets title name
+pygame.display.set_caption("Amruth's Final Game")
+#sets all variables needed
+clock = pygame.time.Clock()
+isJump = False
+JumpCount = 10
+left = False
+right = False
+walkCount = 0
+#Walkinglist, Pygame.image.load will load the given file
+#all the needed sprites to show the character walking right(list)
+walkRight = [pygame.image.load('R1.png'), pygame.image.load('R2.png'), pygame.image.load('R3.png'), pygame.image.load('R4.png'), pygame.image.load('R5.png'), pygame.image.load('R6.png'), pygame.image.load('R7.png'), pygame.image.load('R8.png'), pygame.image.load('R9.png')]
+#all the needed sprites to walk left(list)
+walkLeft = [pygame.image.load('L1.png'), pygame.image.load('L2.png'), pygame.image.load('L3.png'), pygame.image.load('L4.png'), pygame.image.load('L5.png'), pygame.image.load('L6.png'), pygame.image.load('L7.png'), pygame.image.load('L8.png'), pygame.image.load('L9.png')]
+#sets the background(variable)
+bg = pygame.image.load('Galaxygame.jpg')
+#sets what the character looks like while not walking or jumping
+char = pygame.image.load('standing.png')
+
+#new variable
+def remakeWindow():
+    global walkCount
+    # win.blit used to draw images
+    screen.blit(bg, (0,0))
+    # make a rectangle
+    #pygame.draw.rect(screen, (255, 0, 0), (X, Y, WIDTH, HEIGHT))
+    #Total # of sprites, so there can be no more that 27 movements at once
+    if walkCount + 1 >= 27:
+        walkCount = 0
+
+    if left:
+        screen.blit(walkLeft[walkCount//3], (X,Y))
+        walkCount += 1
+
+    elif right:
+        screen.blit(walkRight[walkCount // 3], (X,Y))
+        walkCount += 1
+    else:
+        screen.blit(char, (X,Y))
+    # Update the image
+    pygame.display.update()
+
+
+#Game loop
+running = True
+while running:
+    #delays the window open
+    pygame.time.delay(27)
+    #keep loop running at the right speed
+    clock.tick(27)
+    # Process input (events)
+    for event in pygame.event.get():
+        #check for closing window
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Defines the keypress varible
+    keypress = pygame.key.get_pressed()
+    #This is what reconizes keypresses
+    #Keypress 'A'
+    if keypress[pygame.K_a] and X > VEL:
+        X -= VEL
+        left = True
+        right = False
+    # Keypress 'D'
+    elif keypress[pygame.K_d] and X < SCREENWIDTH - VEL - WIDTH:
+        X += VEL
+        left = False
+        right = True
+
+    else:
+        right = False
+        left = False
+        walkCount = 0
+
+    if not(isJump):
+        #Flip if u want to have it stuck
+        #if keypress[pygame.K_s] and Y < SCREENWIDTH - VEL - HEIGHT:
+            #Y += VEL
+        #Flip if u want to have it stuck to bottom
+        #if keypress[pygame.K_w] and Y > VEL:
+            #Y -= VEL
+        #Jump Function
+        if keypress[pygame.K_SPACE]:
+            isJump = True
+            right = False
+            left = False
+            walkCount = 0
+
+    else:
+        if JumpCount >= -10:
+            neg = 1
+            if JumpCount < 0:
+                neg = -1
+            Y -= (JumpCount ** 2) * 0.5 * neg
+            JumpCount -= 1
+
+        else:
+            isJump = False
+            JumpCount = 10
+            #calls function @ the top
+    remakeWindow()
+
+
+
+
+pygame.quit()
